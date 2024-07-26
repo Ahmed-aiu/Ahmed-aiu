@@ -1,5 +1,5 @@
 - 👋 Hi, I’m @Ahmed-aiu
-- 👀 I’m interested in learning how to build custom AI model
+- 👀 I’m interested in learning how to build custom AI models
 - 🌱 I’m currently learning how to train deep neural nets
 - 💞️ I’m looking to collaborate on AI projects
 - 📫 How to reach me Email
