@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a href="{{ url_for('home_bp.home') }}">
+                <img src="{{url_for('static', filename='img/FEVicon.svg')}}" alt="Home" class="img-fluid" style="max-height: 24px; width: auto;">
+            </a>
+        </li>
+        <li class="breadcrumb-item"><a style="color: rgb(33, 37, 41); text-decoration: none;" href="{{ url_for('sales_bp.sales') }}">Sales</a></li>
+        <li class="breadcrumb-item active" style="color: rgb(33, 37, 41);" aria-current="page">RFQ Distribution
+            <span tabindex="0" class="modal-icon" data-bs-toggle="modal" data-bs-target="#helpModal">
+                <img src="{{url_for('static', filename='img/Help.svg')}}" alt="Help" class="img-fluid" style="max-height: 16px; width: auto;">
+            </span>
+        </li>
+    </ol>
+</nav>
+
+<!-- How-To Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: none;">
+                <h5 class="modal-title">RFQ Distribution - HowTo</h5>
+            </div>
+            <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                <h6><b>Solution Purpose</b></h6>
+                <p>This tool helps in extracting important information from RFQs in pdf, docx or pptx format.
+                </p>
+                <h6><b>Download Example File</b></h6>
+                <p style="margin-bottom: 0;">To test the solution, please use the example file provided below.</p>
+                <div style="display: flex; flex-direction: column; align-items: flex-start; margin-top: 0;">
+                    <a href="#" onclick="downloadFile(event, '/static/example_files/RFQ Distribution Example File.docx')" class="btn btn-secondary" style="width: 30%;">
+                        <i class="bi bi-download"></i> Download example file
+                    </a>
+                </div>
+                <p style="margin-top: 0;">The following guide explains how to use it.</p>
+                
+                <h6><b>How to Use</b></h6>
+                <p>Follow these steps to get started:</p>
+                <ul>
+                    <li><b>Upload RFQ Files</b>: Upload your RFQ (upload of multiple files is also possible).</li>
+                    <li><b>Start Analysis</b>: Click "Start RFQ Analysis".</li>
+                    <li><b>Download Results</b>: View and/or download the results after the review.</li>
+                </ul>
+                <h6><b>Solution Owner: TBA</b></h6>
+            </div>
+            <div class="modal-footer">
+                <div style="display: flex; align-items: center;">
+                    <!-- Annotation for the icon -->
+                    <span>To reopen please click this symbol&nbsp;</span>
+                    <!-- Question mark icon -->
+                    <img src="{{url_for('static', filename='img/Help.svg')}}" alt="Help" class="img-fluid" style="max-height: 16px; width: auto; margin-right: 5px;">
+                </div>
+                <div style="display: flex; align-items: center; margin-left: auto;">
+                    <!-- Checkbox and label -->
+                    <input type="checkbox" id="dontShowAgain" style="margin-right: 5px;" />
+                    <label for="dontShowAgain">Don't show again</label>
+                </div>
+                <!-- Close button -->
+                <button type="button" class="btn btn-secondary" id="closehowtoModal" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JavaScript -->
+<script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='js/libs/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/howtoModal.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Loading Spinner -->
+<div class="modal" id="loading" style="display:none;">
+    <div class="d-flex justify-content-center align-items-center" style="height:100vh;"></div>
+</div>
+
+<!-- Container for the upload form and result -->
+<div id="content-container" style="max-height: 90vh; overflow-y: auto;">
+    {% if analysis_completed %}
+        <!-- Analysis result available, display the result -->
+        <div class="modal-body">
+            <!-- Summary -->
+            <p style="margin-bottom: 0.5%; font-weight: 600;">SUMMARY</p>
+            <textarea placeholder="{{ rfq_summary }}" class="form-control p-1" disabled rows="4" style="resize: vertical;"></textarea>
+            <!-- Meta Information -->
+            <p style="margin-top: 2%; margin-bottom: 0.5%; font-weight: 600;">META INFORMATION</p>
+            <div class="row mt-1">
+                <div class="col-sm-6 d-flex align-items-center">
+                    <label for="tech-contact" class="form-label mr-2 mb-0" style="width: 25%;">Technical Contact:</label>
+                    <input type="text" id="tech-contact" class="form-control p-1" value="{{ rfq_contact_tech }}" disabled>
+                </div>
+                <div class="col-sm-6 d-flex align-items-center">
+                    <label for="sales-contact" class="form-label mr-2 mb-0" style="width: 25%;">Sales Contact:</label>
+                    <input type="text" id="sales-contact" class="form-control p-1" value="{{ rfq_contact_sales }}" disabled>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-sm-6 d-flex align-items-center">
+                    <label for="project-start" class="form-label mr-2 mb-0" style="width: 25%;">Project Start Date:</label>
+                    <input type="text" id="project-start" class="form-control p-1" value="{{ rfq_project_start }}" disabled>
+                </div>
+                <div class="col-sm-6 d-flex align-items-center">
+                    <label for="project-duration" class="form-label mr-2 mb-0" style="width: 25%;">Project Duration:</label>
+                    <input type="text" id="project-duration" class="form-control p-1" value="{{ rfq_project_duration }}" disabled>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-sm-6 d-flex align-items-center">
+                    <label for="proposal-deadline" class="form-label mr-2 mb-0" style="width: 25%;">Proposal Deadline:</label>
+                    <input type="text" id="proposal-deadline" class="form-control p-1" value="{{ rfq_proposal_deadline }}" disabled>
+                </div>
+                <div class="col-sm-6">
+                </div>
+            </div>
+            <!-- Work Content -->
+            <p style="margin-top: 2%; margin-bottom: 0.5%; font-weight: 600;">WORK CONTENT</p>
+            <div class="row">
+                <div class="col">
+                    <label for="main-categories" class="form-label" style="margin-bottom: 0.5%;">System Categories:</label>
+                    {% for value, key in rfq_maincats.items() %}
+                        <input type="text" class="form-control p-1" value="{{ key }}" disabled>
+                    {% endfor %}
+                </div>
+                <div class="col">
+                    <label for="sub-categories" class="form-label" style="margin-bottom: 0.5%;">Work Activities:</label>
+                    {% for value, key in rfq_subcats.items() %}
+                        <input type="text" class="form-control p-1" value="{{ key }}" disabled>
+                    {% endfor %}
+                </div>
+                <div class="col">
+                    <label for="departments" class="form-label" style="margin-bottom: 0.5%;">Responsible Departments (Share):</label>
+                    <table id="departments" class="table table-bordered table-sm" style="font-size: medium;">
+                        <tbody>
+                            {% for value, key in rfq_departs.items() %}
+                            <tr>
+                                {% for item_key, item_value in key.items() %}
+                                <td>{{ item_value }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Download and Analyze Another RFQ Buttons -->
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; margin-top: auto;">
+            <form id="download-form" method="GET" action="{{ url_for('rfq_bp.rfq_distribution') }}">
+                <input type="hidden" name="action" value="download">
+                <button id="btn-hl" class="btn btn-secondary btn-sm" type="submit">DOWNLOAD REPORT</button>
+            </form>
+            <!-- Analyze Another RFQ Button -->
+            <a href="{{ url_for('rfq_bp.rfq_distribution') }}" class="btn btn-secondary btn-sm" style="margin-left:10px;">ANALYZE ANOTHER RFQ</a>
+        </div>
+    {% else %}
+        <!-- Upload form -->
+        <div class="modal-body" style="padding-bottom: 0%;">
+            <form id="rfq-form" class="was-validated">
+                <div class="form-group mb-2">
+                    <label for="file-input" class="form-label">Please upload the RFQ:</label>
+                    <!-- Updated File Input -->
+                    <input class="form-control" type="file" id="file-input" accept=".pdf, .pptx, .docx" multiple>
+                    <!-- Display selected files -->
+                    <ul id="file-list" style="list-style-type: none; padding-left: 0; margin-top: 10px;"></ul>
+                </div>
+                <input type="hidden" name="action" value="analysis">
+                <div class="form-text mt-2" style="color: rgb(218,31,61);">
+                    {{ msg }}
+                </div>
+                <div class="form-group mb-2" style="padding-top: 0%;">
+                    <div class="col" style="display:flex; justify-content: flex-end;">
+                        <button id="btn-hl" class="btn btn-secondary" type="submit">START RFQ ANALYSIS</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var rfqForm = document.getElementById("rfq-form");
+    var loading = document.getElementById('loading');
+    var fileInput = document.getElementById('file-input');
+    var fileList = document.getElementById('file-list');
+    var filesArray = [];
+
+    if (rfqForm) {
+        rfqForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            if (filesArray.length === 0) {
+                alert("Please select at least one file.");
+                return;
+            }
+
+            // Append files from filesArray to FormData
+            var formData = new FormData();
+            formData.append('action', 'analysis');
+
+            for (var i = 0; i < filesArray.length; i++) {
+                formData.append('files', filesArray[i]);
+            }
+
+            // Show loading spinner
+            loading.style.display = 'block';
+
+            // Send the form data via AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', "{{ url_for('rfq_bp.rfq_distribution') }}", true);
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Handle the response
+                        var response = JSON.parse(xhr.responseText);
+                        var tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = response.result_html;
+                        var newContent = tempDiv.querySelector('#content-container').innerHTML;
+                        var contentContainer = document.getElementById('content-container');
+                        contentContainer.innerHTML = newContent;
+                        // Re-initialize any event listeners if needed
+                        if (loading) loading.style.display = 'none';
+                    } else {
+                        // Handle error
+                        alert('An error occurred during the request.');
+                        if (loading) loading.style.display = 'none';
+                    }
+                }
+            };
+
+            xhr.send(formData);
+        });
+    }
+
+    // Handle file input change
+    fileInput.addEventListener('change', function() {
+        var newFiles = Array.from(fileInput.files);
+
+        // Add new files to the filesArray
+        newFiles.forEach(function(file) {
+            // Check if file already exists in the array
+            if (!filesArray.some(f => f.name === file.name && f.lastModified === file.lastModified)) {
+                filesArray.push(file);
+            } else {
+                alert('File "' + file.name + '" is already selected.');
+            }
+        });
+
+        updateFileList();
+        // Reset file input
+        fileInput.value = '';
+    });
+
+    // Function to update the displayed file list
+    function updateFileList() {
+        fileList.innerHTML = '';
+        filesArray.forEach(function(file, index) {
+            var li = document.createElement('li');
+            li.style.display = 'flex';
+            li.style.alignItems = 'center';
+            li.style.marginBottom = '5px';
+
+            var fileNameSpan = document.createElement('span');
+            fileNameSpan.textContent = file.name;
+            fileNameSpan.style.flexGrow = '1';
+
+            var removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.className = 'btn btn-danger btn-sm';
+            removeButton.style.marginLeft = '10px';
+
+            removeButton.addEventListener('click', function() {
+                filesArray.splice(index, 1);
+                updateFileList();
+            });
+
+            li.appendChild(fileNameSpan);
+            li.appendChild(removeButton);
+            fileList.appendChild(li);
+        });
+    }
+});
+</script>
+{% endblock %}
