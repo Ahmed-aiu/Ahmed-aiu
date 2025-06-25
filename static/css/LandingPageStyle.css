@@ -1,0 +1,61 @@
+    .custom-row {
+    position: relative;
+    top: -5%;
+    height: 45%;
+    }
+
+    .overlap-container {
+        position: relative;
+        top: -5%;
+        height: 40%;
+        width: 70%; 
+        margin: 0 auto;
+        /* display: flex; */
+        justify-content: center;
+        align-items: center;
+    }
+
+    .button-round-generic {
+        background-color: rgb(185, 5, 45);
+        width: auto;
+        height: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    
+    .button-square-generic {
+        background-color: rgb(185, 5, 45);
+        width: auto;
+        height: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10%;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        justify-items: center;
+        text-align: center;
+    }
+
+    .grid-item {
+        display: grid;
+        grid-template-columns: 1fr; /* Single column layout */
+        grid-template-rows: 1.5fr 0.5fr 1fr; /* Button gets 2fr, headline and text get 1fr each */
+        gap: 2px; /* Space between elements */
+        justify-items: center; /* Center items horizontally */
+        text-align: center; /* Center text */
+    }

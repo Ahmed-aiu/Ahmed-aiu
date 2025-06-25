@@ -1,0 +1,14 @@
+{
+    "name": "WOMBAT UI",
+    "icons": [
+        {
+            "src": "../img/wombat_logo.png",
+            "type": "image/png",
+            "sizes": "2048x2048"
+        }
+    ],
+    "lang": "en-US",
+    "start-url": "../../html/Home.html",
+    "display": "fullscreen",
+    "orientation": "landscape"
+}

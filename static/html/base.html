@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <title>FEV GenAI Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link rel="icon" href="{{url_for('static', filename='img/FEVfavicon.svg')}}" type="image/svg+xml">
+    <!-- Stylesheets -->
+    {% if request.cookies.get('theme') == 'dark' %}
+        <link id="theme-link" href="{{ url_for('static', filename='css/styleSheetTME.css') }}" rel="stylesheet" type="text/css">
+    {% else %}
+        <link id="theme-link" href="{{ url_for('static', filename='css/styleSheetFEV.css') }}" rel="stylesheet" type="text/css">
+    {% endif %}
+    <!-- <link href="static/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/LandingPageStyle.css') }}" rel="stylesheet" type="text/css">
+    <!-- Fonts -->
+    <!-- <link href="static/css/fonts.css" rel="stylesheet"> -->
+    <link href="{{ url_for('static', filename='css/fonts.css') }}" rel="stylesheet" type="text/css">
+    <!-- JS scripts -->
+    <script src="{{ url_for('static', filename='js/libs/socket.io.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cookieManagement.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/init-style.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='js/toglle-style.js') }}"></script> -->
+    <script src="{{ url_for('static', filename='js/adjustHeight.js') }}"></script>
+
+    <!-- Generate tab_id -->
+    <script>
+    // Generate a unique tab_id and store it in sessionStorage
+    var tab_id = sessionStorage.getItem('tab_id');
+    if (!tab_id) {
+        tab_id = 'tab_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+        sessionStorage.setItem('tab_id', tab_id);
+    }
+    </script>
+    <script>
+        // Retrieve tab_id from sessionStorage
+        var tab_id = sessionStorage.getItem('tab_id');
+        
+        // Initialize Socket.IO connection without hardcoded URL
+        var socket = io.connect({ query: "tab_id=" + tab_id });
+        
+        // Handle connection
+        socket.on('connected', function(data) {
+            // console.log('Connected to room:', data.room);
+        });
+        
+    </script>
+    <!-- <script src="{{url_for('static', filename='js/disclaimer.js') }}"></script> -->
+    {% block head %}{% endblock %}
+</head>
+
+<!-- SCRIPTS -->
+{% block scripts %}{% endblock %}
+<script>
+// initialize the style at documentation loading
+// document.addEventListener('DOMContentLoaded', initStyle);
+// resize the application area on window resize
+window.addEventListener('resize', adjustHeight);
+</script>
+
+<!-- BODY -->
+<body style="background-color:rgba(200, 200, 200, 0.575); height: 100vh; display: flex; flex-direction: column; font-family: 'Poppins', sans-serif;">
+    <div class="container-fluid d-flex flex-column align-items-stretch" style="height: 100%;">
+        <!-- Heading-->
+        <div id="heading" class="row" style="height: 4%; min-height: 35px; max-height: 55px;">
+            <div class="col d-flex justify-content-start align-items-center" style="height: 100%; margin-left: 1%;">
+                {% block breadcrumb %} {% endblock %}
+            </div>
+            <div class="col d-flex justify-content-end align-items-center" style="height: 100%; margin-right: 1%;">
+                <!-- Admin -->
+                {% if admin %}
+                    <a href="{{url_for('admin_bp.admin')}}" class="text-decoration-none text-dark mx-2"> Admin </a>
+                {% else %}
+                {% endif %}
+                <!-- Feedback Link -->
+                <a href="#" class="text-decoration-none text-dark mx-2" data-bs-toggle="modal" data-bs-target="#feedbackModal"> Feedback </a>
+                 <!-- User Profile -->
+                {% if login %}
+                    <a href="{{url_for('profile_bp.profile')}}" class="text-decoration-none text-dark mx-2"> Profile </a>
+                {% else %}
+                {% endif %}
+                <!-- Impressum -->
+                <a href="{{url_for('impressum_bp.impressum')}}" class="text-decoration-none text-dark mx-2"> Impressum </a>
+                <!-- Login -->
+                {% if login %}
+                    <a href="{{url_for('auth_bp.logout')}}" class="text-decoration-none text-dark mx-2"> Logout </a>
+                {% else %}
+                    <a href="{{ auth_uri }}" class="text-decoration-none text-dark mx-2"> Login </a>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Disclaimer --> 
+        <!-- Remember to uncomment the div and the script tag in the base.html file to show the disclaimer modal on page load. -->
+        <!-- <div id="Disclaimer" style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgb(0,0,0); background-color:rgba(0,0,0,0.4);">
+            <div style="background-color:#fefefe; margin:15% auto; padding:20px; border:1px solid #888; width:80%;">
+                <span id="closeModal" style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+                <p>Dear colleagues, <br>
+                    <br>
+                    welcome to our FEV AI Hub. The website is currently under construction, so that certain functionalities may temporarily not be available. <br>
+                    Please expect new and updated features soon.<br>
+                    <br>
+                    Your FEV GenAI Hub Team</p>
+            </div>
+        </div>     -->
+
+            <!-- Toasts -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div aria-live="polite" aria-atomic="true" style="position: relative; z-index: 9999;">
+            <!-- Position it -->
+            <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+                {% for category, message in messages %}
+                <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                    <div id="splitToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">
+                                {% if category == 'success' %}
+                                    Success
+                                {% elif category == 'error' %}
+                                    Error
+                                {% else %}
+                                    Info
+                                {% endif %}
+                            </strong>
+                            <small class="text-muted">just now</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                            <div class="toast-body" style="color: {% if category == 'error' %}red{% elif category == 'success' %}green{% else %}black{% endif %};">
+                                {{ message }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    {% endwith %}
+
+        <!-- Application -->
+        <div id="application" class="border" style="height: 95%; border-radius: 10px; overflow: auto; border: 1px solid grey; background-color: #ffffff;">
+            {% block content %} {% endblock %}
+        </div>
+    </div>
+
+<!--Feedback Modal-->
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: none;">
+                <h5 class="modal-title">GenAiHub Support Ticket</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                <h6><b>We Value Your Feedback!</b></h6> 
+                We're always eager to hear from you and appreciate any feedback you can provide. Whether it's reporting a bug, suggesting a new feature, or sharing your overall experience, your input helps us improve and serve you better. Thank you for taking the time to share your insights! <br>
+                <form id="feedbackForm" action="/submit_feedback" method="post" enctype="multipart/form-data">
+                    <br>
+                    <div class="form-group">
+                        <label for="ticket-type">Ticket Type*:</label>
+                        <select class="form-control" id="ticket-type" name="type" required>
+                            <option value="" disabled selected>Select Ticket Type</option>
+                            <option value="Bug">Bug Report</option>
+                            <option value="Feature">Feature Request</option>
+                            <option value="Feedback">General Feedback</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="stepsToReproduce" style="display: none;">
+                        <br>
+                        <label for="steps">Steps to Reproduce*:</label>
+                        <textarea class="form-control" id="steps" name="steps" rows="3" placeholder="Please describe the steps to reproduce the bug."></textarea>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="title">Topic*:</label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Please provide a topic" required>
+                    </div>
+                    <div class="form-group">
+                        <br>
+                        <label for="description">Description*:</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" placeholder="Please provide a brief description of the issue, bug or feature request." required></textarea>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="image">Upload Screenshot</label>
+                        <input type="file" class="form-control" id="image" name="file" accept="image/*">
+                        <div id="dropZone" class="drop-zone">
+                            Drag & Drop Image Here or Click to Upload
+                        </div>
+                    </div>
+                    <br>
+                    <input type="hidden" id="userAgent" name="userAgent">
+                    <input type="hidden" id="screenWidth" name="screenWidth">
+                    <input type="hidden" id="screenHeight" name="screenHeight">
+                    <input type="hidden" id="viewportWidth" name="viewportWidth">
+                    <input type="hidden" id="viewportHeight" name="viewportHeight">
+                    <input type="hidden" id="language" name="language">
+                    <input type="hidden" id="timeZone" name="timeZone">
+                    <input type="hidden" id="platform" name="platform">
+                    <button type="submit" class="btn btn-secondary">Submit</button>
+                </form>
+                <p class="text-muted mt-3" style="font-size: 0.9em;">Fields marked with * are mandatory.</p>
+            </div>
+        </div>
+    </div>
+</div>>
+</body>
+</html>
+
+<script>
+// Initialize tooltips
+// Initialize Toasts and Tooltips after the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", function() {
+
+    // Initialize Toasts
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    var toastList = toastElList.map(function(toastEl) {
+        // Configure toast to stay visible for a longer duration
+        return new bootstrap.Toast(toastEl, {
+            autohide: true,   // Set to true to automatically hide the toast
+            delay: 10000      // Display toast for 10 seconds (10,000 milliseconds)
+        });
+    });
+    toastList.forEach(toast => toast.show());
+
+    // Initialize Tooltips
+    // Select all elements with data-bs-toggle="tooltip"
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+    // Apply tooltip and handle hover and click events
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+        var tooltip = new bootstrap.Tooltip(tooltipTriggerEl, {
+            delay: { "show": 0, "hide": 100 },  // Instant appearance
+            placement: 'top',
+            trigger: 'hover'  // Trigger on hover by default
+        });
+
+        // Add click event to toggle the tooltip on click
+        tooltipTriggerEl.addEventListener('click', function (event) {
+            tooltip.toggle();
+        });
+    });
+
+});
+</script>
+
+
+<style>
+    /* Styles for the drop zone area */
+    .drop-zone {
+        border: 2px dashed #ccc; /* Dashed border for the drop zone */
+        border-radius: 5px; /* Rounded corners */
+        padding: 20px; /* Padding inside the drop zone */
+        text-align: center; /* Center-align text */
+        cursor: pointer; /* Pointer cursor to indicate interactivity */
+    }
+    .drop-zone.dragover {
+        border-color: #000; /* Change border color when dragging over the drop zone */
+    }
+</style>
+
+<script>
+    // Add a click event listener to the drop zone
+    document.getElementById('dropZone').addEventListener('click', function() {
+        // Trigger the file input click when the drop zone is clicked
+        document.getElementById('image').click();
+    });
+    
+    // Add a dragover event listener to the drop zone
+    document.getElementById('dropZone').addEventListener('dragover', function(e) {
+        e.preventDefault(); // Prevent default behavior
+        e.stopPropagation(); // Stop event propagation
+        this.classList.add('dragover'); // Add a class to indicate dragover state
+    });
+    
+    // Add a dragleave event listener to the drop zone
+    document.getElementById('dropZone').addEventListener('dragleave', function(e) {
+        e.preventDefault(); // Prevent default behavior
+        e.stopPropagation(); // Stop event propagation
+        this.classList.remove('dragover'); // Remove the dragover class
+    });
+    
+    // Add a drop event listener to the drop zone
+    document.getElementById('dropZone').addEventListener('drop', function(e) {
+        e.preventDefault(); // Prevent default behavior
+        e.stopPropagation(); // Stop event propagation
+        this.classList.remove('dragover'); // Remove the dragover class
+        const files = e.dataTransfer.files; // Get the dropped files
+        document.getElementById('image').files = files; // Assign the files to the file input
+    });
+</script>
+
+<script>
+    // Wait for the DOM to load before adding event listeners
+    document.addEventListener("DOMContentLoaded", function () {
+        // Add a change event listener to the "ticket-type" dropdown
+        document.getElementById("ticket-type").addEventListener("change", showAdditionalFields);
+    });
+
+    
+    // Function to show or hide additional fields based on the selected type
+    function showAdditionalFields() {
+        var type = document.getElementById("ticket-type").value; // Updated to use "ticket-type"
+        var stepsToReproduce = document.getElementById("stepsToReproduce");
+        var stepsField = document.getElementById("steps");
+
+        if (type === "Bug") {
+            stepsToReproduce.style.display = "block";
+            stepsField.setAttribute("required", "required");
+        } else {
+            stepsToReproduce.style.display = "none";
+            stepsField.removeAttribute("required");
+        }
+        addClientInfo();
+    }
+    // Function to populate hidden fields with client information
+    function addClientInfo() {
+        document.getElementById('userAgent').value = navigator.userAgent; // Get the user agent
+        document.getElementById('screenWidth').value = window.screen.width; // Get the screen width
+        document.getElementById('screenHeight').value = window.screen.height; // Get the screen height
+        document.getElementById('viewportWidth').value = window.innerWidth; // Get the viewport width
+        document.getElementById('viewportHeight').value = window.innerHeight; // Get the viewport height
+        document.getElementById('language').value = navigator.language || navigator.userLanguage; // Get the browser language
+        document.getElementById('timeZone').value = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get the time zone
+        document.getElementById('platform').value = navigator.platform; // Get the platform
+    }
+</script>
+
+<script>
+    // Add a click event listener to the feedback link
+    document.getElementById('feedbackLink').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        document.getElementById('feedbackModal').style.display = 'flex'; // Show the feedback modal
+    });
+    
+    // Add a click event listener to the close button of the modal
+    document.getElementById('closeModal').addEventListener('click', function() {
+        document.getElementById('feedbackModal').style.display = 'none'; // Hide the feedback modal
+    });
+    
+    // Add a click event listener to the window
+    window.addEventListener('click', function(event) {
+        // Hide the modal if the user clicks outside of it
+        if (event.target == document.getElementById('feedbackModal')) {
+            document.getElementById('feedbackModal').style.display = 'none';
+        }
+    });
+</script>
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+
+

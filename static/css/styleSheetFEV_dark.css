@@ -1,0 +1,206 @@
+/* Loading Button */
+div#loading {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 )
+    url('../img/spinner_FEV.gif')
+    50% 50%
+    no-repeat;
+    background-size: 100px 100px;
+    }
+
+div#loading .status-message {
+    position: absolute;
+    top: 60%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Customize the stepper circle color when active */
+.bs-stepper .step.active .bs-stepper-circle {
+    background-color: rgb(218,31,61); /* Active color */
+    color: #fff; /* Text color */
+}
+
+#statusMessages {
+    margin-top: 10px;
+    color: #333;
+}
+.btn:active {
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5); /* Adjust the shadow color and size as needed */
+}
+.btn-secondary{
+    font-size: 100%;
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(130,130,130,1);
+    color: rgba(220,220,220,1);
+}
+.btn-primary{
+    font-size: 100%;
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(218,31,61,1);
+    color: rgba(220,220,220,1);
+    border-color: black;
+}
+.btn-primary:hover{
+    background-color: rgba(236,118,137,1);
+    border-color: black;
+}
+.btn-primary:focus{
+    background-color: rgba(236,118,137,1);
+    border-color: black;
+}
+.btn-primary:disabled{
+    background-color: rgb(130,130,130);
+    border-color: black;
+}
+.btn-grey{
+    background-color: rgba(240, 240, 240, 1);
+    color: rgba(60, 60, 60, 1);
+    border-color: black;
+    box-shadow: 0.7vh 0.7vh 0.7vh rgb(0 0 0 / 50%);
+    border-width: 0.3vh;
+    border-radius: 0.5vh;
+}
+.btn-grey:hover{
+    background-color: rgba(220, 220, 220, 1);
+    border-color: black;
+}
+.btn-grey:focus{
+    background-color: rgba(210, 210, 210, 1);
+    box-shadow: 0.7vh 0.7vh 0.7vh rgb(0 0 0 / 50%);
+    border-color: black;
+}
+.btn-grey:disabled{
+    background-color: rgb(210,210,210);
+    border-color: black;
+}
+.btn-icon{
+    height: 55%;
+    width: 100%; 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+}
+
+#download_button_reviewed{
+    background-color: rgba(218,31,61,1);
+    border-color: black;
+}
+
+#download_button_reviewed:hover{
+    background-color: rgb(236,118,137);
+}
+
+#closehowtoModal{
+    background-color: rgb(218,31,61);
+}
+
+#closehowtoModal:hover{
+    background-color: rgb(236,118,137);
+}
+
+#btn-hl{
+    background-color: rgb(218,31,61);
+}
+#btn-hl:hover{
+    background-color: rgb(236,118,137);
+}
+
+.nav-link{
+    color: rgba(255,255,255,1) !important;
+}
+
+#login_batch{
+    color: white;
+    text-decoration: none;
+}
+
+.table{
+    font-size:1.2rem
+}
+
+.tr{
+    font-size:1.2rem
+}
+.td{
+    font-size:1.2rem
+}
+
+.form-label{
+    font-size: 0.8rem;
+    margin-bottom: .2rem;
+}
+
+.tooltip-inner {
+    background-color: #f8f9fa;  /* Light background for the tooltip */
+    color: #343a40;  /* Dark text for readability */
+    font-size: 14px;  /* Adjust font size */
+    padding: 10px;  /* Add padding for a better appearance */
+    border-radius: 8px;  /* Rounded corners */
+    border: 1px solid #343a40;  /* Optional border */
+}
+
+.tooltip-arrow {
+    border-top-color: #f8f9fa;  /* Match the arrow color with the tooltip background */
+}
+
+/* Adjust the modal backdrop opacity */
+.modal-backdrop.show {
+    opacity: 0.4;
+}
+
+/* Customize the modal dialog */
+.custom-modal-dialog {
+    max-width: 80%;
+}
+
+/* Customize the modal content */
+.custom-modal-content {
+    background-color: #fefefe;
+    border: 1px solid #888;
+    padding: 20px;
+    position: relative;
+}
+
+/* Style the close button */
+.custom-close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none; /* Remove focus outline */
+}
+
+.custom-close:hover,
+.custom-close:focus,
+.custom-close:active {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: transparent; /* Remove blue background on hover */
+    outline: none; /* Remove blue outline */
+    box-shadow: none; /* Remove any box-shadow */
+}
+
+/* Remove blue background on focus and active states for the close button */
+.btn-close.custom-close:focus,
+.btn-close.custom-close:active {
+    box-shadow: none;
+    outline: none;
+    background-color: transparent;
+}

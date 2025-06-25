@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb mb-0">
+		<li class="breadcrumb-item">
+			<a href="{{url_for('home_bp.home')}}">
+				<img src="{{url_for('static', filename='img/FEVicon.svg')}}" alt="Home" class="img-fluid" style="max-height: 24px; width: auto;">
+			</a>
+		</li>
+		<li class="breadcrumb-item active" style="color: rgb(33, 37, 41);" aria-current="page">Engineering</li>
+	</ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<!-- Upper Division with Background Image -->
+<div class="position-relative" style="height: 20%; width: 100%; background-image: url('{{ url_for('static', filename='img/Corporate-Scene-A4_2024_darkmode.png') }}'); background-size: cover; background-position: center;">
+	<!-- Text Overlay -->
+	<div class="position-absolute top-50 start-50 translate-middle text-white" style="text-align: center;">
+		<h2 style="font-family: 'Poppins', sans-serif; font-weight: 500;">Engineering</h2>
+	</div>
+</div>
+<!-- Lower Division with White Background -->
+<div style="height: 55%; background-color: white;">
+    <!-- Buttons Container -->
+	<div class="overlap-container">
+		<div class="grid-container"> 
+			<!-- Button -->
+			<div class ="grid-item">
+				<button class="btn button-square-generic" onclick="location.href='{{url_for('methods_processes_knowledge_bp.methods_processes_knowledge')}}'" style="background-image: url('{{ url_for('static', filename='img/EPF.svg') }}'); background-size: 60%;"></button>
+				<h5 class="mt-3 mb-1" style="color: black;">Methods, Processes & Knowledge</h5>
+				<p class="mb-4" style="color: rgb(150,150,150);">Making our FEV<br>knowledge accessible</p>
+			</div>
+			<!-- Button -->
+			<div class ="grid-item">
+				<button class="btn button-square-generic" onclick="location.href='{{url_for('requirements_engineering_bp.requirements_engineering')}}'" style="background-image: url('{{ url_for('static', filename='img/RequirementsEngineering.svg') }}'); background-size: 60%;"></button>
+				<h5 class="mt-3 mb-1" style="color: black;">Requirements Engineering</h5>
+				<p class="mb-4" style="color: rgb(150,150,150);">Tools supporting<br>Requirements Engineering tasks</p>
+			</div>
+			<!-- Button -->
+			<div class ="grid-item">
+                <button class="btn button-square-generic" onclick="location.href='{{url_for('function_development_bp.function_development')}}'" style="background-image: url('{{ url_for('static', filename='img/FunctionDevelopment.svg') }}'); background-size: 60%;"></button>
+                <h5 class="mt-3 mb-1">Function Development</h5>
+                <p class="mb-4" style="color: rgb(150,150,150);">Tools supporting<br>Function Development tasks</p>
+            </div>
+			<!-- Button -->
+			<div class="grid-item">
+				<button class="btn button-square-generic" onclick="location.href='{{url_for('testing_validation_bp.testing_validation')}}'" style="background-image: url('{{ url_for('static', filename='img/TestingValidation.svg') }}'); background-size: 60%"></button>
+				<h5 class="mt-3 mb-1">Testing & Validation</h5>
+				<p class="mb-4" style="color: rgb(150,150,150);">Tools supporting<br>Testing & Validation</p>
+			</div>
+			<div class="grid-item">
+                <button class="btn button-square-generic" onclick="location.href='{{url_for('project_tools_bp.project_tasks')}}'" style="background-image: url('{{ url_for('static', filename='img/Projects.svg')}}'); background-size: 35%"></button>
+                <h5 class="mt-3 mb-1">Project Tools</h5>
+                <p class="mb-4" style="color: rgb(150,150,150);">Tools supporting<br>project-specific tasks</p>
+            </div>
+		</div>
+		<div class="grid-container" style="display: none;"> 
+			<!-- Hidden Button -->
+			<div class ="grid-item">
+				<button class="btn button-square-generic" style="background-image: url('{{ url_for('static', filename='img/Sales.svg') }}'); background-size: 50%;"></button>
+				<h5 class="mt-3 mb-1">Button</h5>
+				<p class="mb-4" style="color: rgb(150,150,150);">Text</p>
+			</div>
+		</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="../static/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
