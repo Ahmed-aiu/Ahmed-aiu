@@ -133,17 +133,21 @@ document.addEventListener("DOMContentLoaded", function() {
             loading.style.display = 'block';
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/rfqd', true);
+            // Send the RFQ files to the n8n workflow instead of the Flask route
+            xhr.open('POST', 'https://<n8n-host>/webhook/rfq', true);
 
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
-                        var tempDiv = document.createElement('div');
-                        tempDiv.innerHTML = response.result_html;
-                        var newContent = tempDiv.querySelector('#content-container').innerHTML;
-                        var contentContainer = document.getElementById('content-container');
-                        contentContainer.innerHTML = newContent;
+                        var resultHtml = response.result_html || response.html || response.data;
+                        if (resultHtml) {
+                            var tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = resultHtml;
+                            var newContent = tempDiv.querySelector('#content-container').innerHTML;
+                            var contentContainer = document.getElementById('content-container');
+                            contentContainer.innerHTML = newContent;
+                        }
                         if (loading) loading.style.display = 'none';
                     } else {
                         alert('An error occurred during the request.');
