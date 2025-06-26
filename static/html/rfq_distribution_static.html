@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
             loading.style.display = 'block';
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/rfqd', true);
+            xhr.open('POST', 'https://your-api.example.com/rfqd', true);
 
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
