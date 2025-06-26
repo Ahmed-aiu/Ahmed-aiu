@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>RFQ Distribution</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/static/img/FEVfavicon.svg" type="image/svg+xml">
+    <link href="/static/css/styleSheetFEV.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/LandingPageStyle.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/fonts.css" rel="stylesheet" type="text/css">
+    <script src="/static/js/libs/socket.io.min.js"></script>
+    <script src="/static/js/cookieManagement.js"></script>
+    <script src="/static/js/init-style.js"></script>
+    <script src="/static/js/adjustHeight.js"></script>
+</head>
+<body style="background-color:rgba(200, 200, 200, 0.575); height: 100vh; display: flex; flex-direction: column; font-family: 'Poppins', sans-serif;">
+<div class="container-fluid d-flex flex-column align-items-stretch" style="height: 100%;">
+    <div id="heading" class="row" style="height: 4%; min-height: 35px; max-height: 55px;">
+        <div class="col d-flex justify-content-start align-items-center" style="height: 100%; margin-left: 1%;">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="/index.html">
+                            <img src="/static/img/FEVicon.svg" alt="Home" class="img-fluid" style="max-height: 24px; width: auto;">
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item"><a style="color: rgb(33, 37, 41); text-decoration: none;" href="/sales.html">Sales</a></li>
+                    <li class="breadcrumb-item active" style="color: rgb(33, 37, 41);" aria-current="page">RFQ Distribution
+                        <span tabindex="0" class="modal-icon" data-bs-toggle="modal" data-bs-target="#helpModal">
+                            <img src="/static/img/Help.svg" alt="Help" class="img-fluid" style="max-height: 16px; width: auto;">
+                        </span>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col d-flex justify-content-end align-items-center" style="height: 100%; margin-right: 1%;">
+        </div>
+    </div>
+    <div id="application" class="border" style="height: 95%; border-radius:10px; overflow: auto; border: 1px solid grey; background-color: #ffffff;">
+        <div class="modal" id="loading" style="display:none;">
+            <div class="d-flex justify-content-center align-items-center" style="height:100vh;"></div>
+        </div>
+        <div id="content-container" style="max-height: 90vh; overflow-y: auto;">
+            <div class="modal-body" style="padding-bottom: 0%;">
+                <form id="rfq-form" class="was-validated">
+                    <div class="form-group mb-2">
+                        <label for="file-input" class="form-label">Please upload the RFQ:</label>
+                        <input class="form-control" type="file" id="file-input" accept=".pdf, .pptx, .docx" multiple>
+                        <ul id="file-list" style="list-style-type: none; padding-left: 0; margin-top: 10px;"></ul>
+                    </div>
+                    <input type="hidden" name="action" value="analysis">
+                    <div class="form-text mt-2" style="color: rgb(218,31,61);"></div>
+                    <div class="form-group mb-2" style="padding-top: 0%;">
+                        <div class="col" style="display:flex; justify-content: flex-end;">
+                            <button id="btn-hl" class="btn btn-secondary" type="submit">START RFQ ANALYSIS</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How-To Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: none;">
+                <h5 class="modal-title">RFQ Distribution - HowTo</h5>
+            </div>
+            <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                <h6><b>Solution Purpose</b></h6>
+                <p>This tool helps in extracting important information from RFQs in pdf, docx or pptx format.</p>
+                <h6><b>Download Example File</b></h6>
+                <p style="margin-bottom: 0;">To test the solution, please use the example file provided below.</p>
+                <div style="display: flex; flex-direction: column; align-items: flex-start; margin-top: 0;">
+                    <a href="#" onclick="downloadFile(event, '/static/example_files/RFQ Distribution Example File.docx')" class="btn btn-secondary" style="width: 30%;">
+                        <i class="bi bi-download"></i> Download example file
+                    </a>
+                </div>
+                <p style="margin-top: 0;">The following guide explains how to use it.</p>
+                <h6><b>How to Use</b></h6>
+                <p>Follow these steps to get started:</p>
+                <ul>
+                    <li><b>Upload RFQ Files</b>: Upload your RFQ (upload of multiple files is also possible).</li>
+                    <li><b>Start Analysis</b>: Click "Start RFQ Analysis".</li>
+                    <li><b>Download Results</b>: View and/or download the results after the review.</li>
+                </ul>
+                <h6><b>Solution Owner: TBA</b></h6>
+            </div>
+            <div class="modal-footer">
+                <div style="display: flex; align-items: center;">
+                    <span>To reopen please click this symbol&nbsp;</span>
+                    <img src="/static/img/Help.svg" alt="Help" class="img-fluid" style="max-height: 16px; width: auto; margin-right: 5px;">
+                </div>
+                <div style="display: flex; align-items: center; margin-left: auto;">
+                    <input type="checkbox" id="dontShowAgain" style="margin-right: 5px;" />
+                    <label for="dontShowAgain">Don't show again</label>
+                </div>
+                <button type="button" class="btn btn-secondary" id="closehowtoModal" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" charset="utf8" src="/static/js/libs/bootstrap.bundle.min.js"></script>
+<script src="/static/js/howtoModal.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var rfqForm = document.getElementById("rfq-form");
+    var loading = document.getElementById('loading');
+    var fileInput = document.getElementById('file-input');
+    var fileList = document.getElementById('file-list');
+    var filesArray = [];
+
+    if (rfqForm) {
+        rfqForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            if (filesArray.length === 0) {
+                alert("Please select at least one file.");
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('action', 'analysis');
+
+            for (var i = 0; i < filesArray.length; i++) {
+                formData.append('files', filesArray[i]);
+            }
+
+            loading.style.display = 'block';
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/rfqd', true);
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        var tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = response.result_html;
+                        var newContent = tempDiv.querySelector('#content-container').innerHTML;
+                        var contentContainer = document.getElementById('content-container');
+                        contentContainer.innerHTML = newContent;
+                        if (loading) loading.style.display = 'none';
+                    } else {
+                        alert('An error occurred during the request.');
+                        if (loading) loading.style.display = 'none';
+                    }
+                }
+            };
+
+            xhr.send(formData);
+        });
+    }
+
+    fileInput.addEventListener('change', function() {
+        var newFiles = Array.from(fileInput.files);
+
+        newFiles.forEach(function(file) {
+            if (!filesArray.some(f => f.name === file.name && f.lastModified === file.lastModified)) {
+                filesArray.push(file);
+            } else {
+                alert('File "' + file.name + '" is already selected.');
+            }
+        });
+
+        updateFileList();
+        fileInput.value = '';
+    });
+
+    function updateFileList() {
+        fileList.innerHTML = '';
+        filesArray.forEach(function(file, index) {
+            var li = document.createElement('li');
+            li.style.display = 'flex';
+            li.style.alignItems = 'center';
+            li.style.marginBottom = '5px';
+
+            var fileNameSpan = document.createElement('span');
+            fileNameSpan.textContent = file.name;
+            fileNameSpan.style.flexGrow = '1';
+
+            var removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.className = 'btn btn-danger btn-sm';
+            removeButton.style.marginLeft = '10px';
+
+            removeButton.addEventListener('click', function() {
+                filesArray.splice(index, 1);
+                updateFileList();
+            });
+
+            li.appendChild(fileNameSpan);
+            li.appendChild(removeButton);
+            fileList.appendChild(li);
+        });
+    }
+});
+</script>
+</body>
+</html>
