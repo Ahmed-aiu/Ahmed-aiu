@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <title>RFQ Distribution</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="/static/img/FEVfavicon.svg" type="image/svg+xml">
-    <link href="/static/css/styleSheetFEV.css" rel="stylesheet" type="text/css">
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="/static/css/LandingPageStyle.css" rel="stylesheet" type="text/css">
-    <link href="/static/css/fonts.css" rel="stylesheet" type="text/css">
-    <script src="/static/js/libs/socket.io.min.js"></script>
-    <script src="/static/js/cookieManagement.js"></script>
-    <script src="/static/js/init-style.js"></script>
-    <script src="/static/js/adjustHeight.js"></script>
+    <link rel="icon" href="static/img/FEVfavicon.svg" type="image/svg+xml">
+    <link href="static/css/styleSheetFEV.css" rel="stylesheet" type="text/css">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="static/css/LandingPageStyle.css" rel="stylesheet" type="text/css">
+    <link href="static/css/fonts.css" rel="stylesheet" type="text/css">
+    <script src="static/js/libs/socket.io.min.js"></script>
+    <script src="static/js/cookieManagement.js"></script>
+    <script src="static/js/init-style.js"></script>
+    <script src="static/js/adjustHeight.js"></script>
 </head>
 <body style="background-color:rgba(200, 200, 200, 0.575); height: 100vh; display: flex; flex-direction: column; font-family: 'Poppins', sans-serif;">
 <div class="container-fluid d-flex flex-column align-items-stretch" style="height: 100%;">
@@ -21,11 +21,11 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item">
-                        <img src="/static/img/FEVicon.svg" alt="Home" class="img-fluid" style="max-height: 24px; width: auto;">
+                        <img src="static/img/FEVicon.svg" alt="Home" class="img-fluid" style="max-height: 24px; width: auto;">
                     </li>
                     <li class="breadcrumb-item active" style="color: rgb(33, 37, 41);" aria-current="page">RFQ Distribution
                         <span tabindex="0" class="modal-icon" data-bs-toggle="modal" data-bs-target="#helpModal">
-                            <img src="/static/img/Help.svg" alt="Help" class="img-fluid" style="max-height: 16px; width: auto;">
+                            <img src="static/img/Help.svg" alt="Help" class="img-fluid" style="max-height: 16px; width: auto;">
                         </span>
                     </li>
                 </ol>
@@ -72,7 +72,7 @@
                 <h6><b>Download Example File</b></h6>
                 <p style="margin-bottom: 0;">To test the solution, please use the example file provided below.</p>
                 <div style="display: flex; flex-direction: column; align-items: flex-start; margin-top: 0;">
-                    <a href="#" onclick="downloadFile(event, '/static/example_files/RFQ Distribution Example File.docx')" class="btn btn-secondary" style="width: 30%;">
+                    <a href="#" onclick="downloadFile(event, 'static/example_files/RFQ Distribution Example File.docx')" class="btn btn-secondary" style="width: 30%;">
                         <i class="bi bi-download"></i> Download example file
                     </a>
                 </div>
@@ -89,7 +89,7 @@
             <div class="modal-footer">
                 <div style="display: flex; align-items: center;">
                     <span>To reopen please click this symbol&nbsp;</span>
-                    <img src="/static/img/Help.svg" alt="Help" class="img-fluid" style="max-height: 16px; width: auto; margin-right: 5px;">
+                    <img src="static/img/Help.svg" alt="Help" class="img-fluid" style="max-height: 16px; width: auto; margin-right: 5px;">
                 </div>
                 <div style="display: flex; align-items: center; margin-left: auto;">
                     <input type="checkbox" id="dontShowAgain" style="margin-right: 5px;" />
@@ -101,8 +101,8 @@
     </div>
 </div>
 
-<script type="text/javascript" charset="utf8" src="/static/js/libs/bootstrap.bundle.min.js"></script>
-<script src="/static/js/howtoModal.js"></script>
+<script type="text/javascript" charset="utf8" src="static/js/libs/bootstrap.bundle.min.js"></script>
+<script src="static/js/howtoModal.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     var rfqForm = document.getElementById("rfq-form");
